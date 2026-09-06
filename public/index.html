@@ -1415,6 +1415,7 @@
             <a href="#" onclick="goHome()">Home</a>
             <a href="#" onclick="scrollToReviews()">Reviews</a>
             <a href="#" onclick="scrollToPosts()">Guides</a>
+            <a href="#" onclick="showSection('admin')">Admin</a>
         </div>
     </div>
 </footer>
@@ -1749,7 +1750,13 @@ document.getElementById('admin-pass').addEventListener('keyup', function(e) {
     const posts = await loadPosts();
     renderPosts(posts);
     renderReviewCards(posts);
+    if (window.location.hash === '#admin') showSection('admin');
 })();
+
+window.addEventListener('hashchange', function() {
+    if (window.location.hash === '#admin') showSection('admin');
+    else goHome();
+});
 </script>
 
 </body>
