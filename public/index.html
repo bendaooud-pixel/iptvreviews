@@ -1443,12 +1443,12 @@ function sanitize(str) {
 
 function sanitizeHTML(html) {
     return String(html)
-        .replace(/<script[\s\S]*?<\/script>/gi,'')
-        .replace(/<style[\s\S]*?<\/style>/gi,'')
-        .replace(/<iframe[\s\S]*?<\/iframe>/gi,'')
-        .replace(/<object[\s\S]*?<\/object>/gi,'')
-        .replace(/<embed[\s\S]*?>/gi,'')
-        .replace(/<form[\s\S]*?<\/form>/gi,'')
+        .replace(new RegExp('<scr'+'ipt[\\s\\S]*?</scr'+'ipt>','gi'),'')
+        .replace(new RegExp('<sty'+'le[\\s\\S]*?</sty'+'le>','gi'),'')
+        .replace(new RegExp('<ifr'+'ame[\\s\\S]*?</ifr'+'ame>','gi'),'')
+        .replace(new RegExp('<obj'+'ect[\\s\\S]*?</obj'+'ect>','gi'),'')
+        .replace(new RegExp('<em'+'bed[\\s\\S]*?>','gi'),'')
+        .replace(new RegExp('<fo'+'rm[\\s\\S]*?</fo'+'rm>','gi'),'')
         .replace(/on\w+\s*=\s*"[^"]*"/gi,'')
         .replace(/on\w+\s*=\s*'[^']*'/gi,'')
         .replace(/javascript\s*:/gi,'');
