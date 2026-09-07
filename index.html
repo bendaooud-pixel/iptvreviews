@@ -1516,17 +1516,20 @@ function renderPosts(posts) {
     `).join('');
 }
 
-async function viewPost(id) {
+async function viewPost(id, skipHash) {
     try {
         const { data: post, error } = await sb.from('posts').select('*').eq('id', id).single();
         if (error || !post) throw new Error('Post not found');
 
         sb.from('posts').update({ views: post.views + 1 }).eq('id', id).then(() => {});
 
+        if (!skipHash) window.location.hash = 'article/' + id;
+
         document.querySelector('.hero').style.display = 'none';
         document.getElementById('categories-section').style.display = 'none';
         document.getElementById('reviews-section').style.display = 'none';
         document.getElementById('posts-section').style.display = 'none';
+        document.getElementById('admin-section').style.display = 'none';
 
         const view = document.getElementById('article-view');
         view.style.display = 'block';
@@ -1535,9 +1538,13 @@ async function viewPost(id) {
             <span>By <strong>${post.author}</strong></span>
             <span>Published ${post.date}</span>
             <span>${post.views.toLocaleString()} views</span>
-            <span>Rating: ${post.rating || '4.5'}/5</span>
         `;
         document.getElementById('article-content').innerHTML = post.content;
+
+        document.title = post.title + ' - IPTVPrimer.ca';
+        let metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) metaDesc.setAttribute('content', post.excerpt || '');
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (e) {
         showToast('Failed to load article', 'error');
@@ -1545,11 +1552,13 @@ async function viewPost(id) {
 }
 
 async function closeArticle() {
+    window.location.hash = '';
     document.getElementById('article-view').style.display = 'none';
     document.querySelector('.hero').style.display = 'grid';
     document.getElementById('categories-section').style.display = 'block';
     document.getElementById('reviews-section').style.display = 'block';
     document.getElementById('posts-section').style.display = 'block';
+    document.title = 'IPTVPrimer.ca - Canadian IPTV & Streaming Guides';
     const posts = await loadPosts();
     renderPosts(posts);
     renderReviewCards(posts);
@@ -1746,16 +1755,33 @@ document.getElementById('admin-pass').addEventListener('keyup', function(e) {
     if (e.key === 'Enter') adminLogin();
 });
 
+async function handleRoute() {
+    const hash = window.location.hash;
+    const articleMatch = hash.match(/^#article\/(\d+)$/);
+    if (articleMatch) {
+        await viewPost(parseInt(articleMatch[1]), true);
+    } else if (hash === '#admin') {
+        showSection('admin');
+    }
+}
+
 (async function init() {
     const posts = await loadPosts();
     renderPosts(posts);
     renderReviewCards(posts);
-    if (window.location.hash === '#admin') showSection('admin');
+    await handleRoute();
 })();
 
-window.addEventListener('hashchange', function() {
-    if (window.location.hash === '#admin') showSection('admin');
-    else goHome();
+window.addEventListener('hashchange', async function() {
+    const hash = window.location.hash;
+    const articleMatch = hash.match(/^#article\/(\d+)$/);
+    if (articleMatch) {
+        await viewPost(parseInt(articleMatch[1]), true);
+    } else if (hash === '#admin') {
+        showSection('admin');
+    } else {
+        goHome();
+    }
 });
 </script>
 
