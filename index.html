@@ -1542,7 +1542,7 @@ async function viewPost(id, skipPush) {
         `;
         document.getElementById('article-content').innerHTML = post.content;
 
-        document.title = post.title + ' - IPTVPrimer.ca';
+        document.title = post.title + ' - Meilleur IPTV Quebec';
         let metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) metaDesc.setAttribute('content', post.excerpt || '');
         let canonical = document.querySelector('link[rel="canonical"]');
@@ -1571,7 +1571,7 @@ async function closeArticle() {
     document.getElementById('categories-section').style.display = 'block';
     document.getElementById('reviews-section').style.display = 'block';
     document.getElementById('posts-section').style.display = 'block';
-    document.title = 'IPTVPrimer.ca - Canadian IPTV & Streaming Guides';
+    document.title = 'Meilleur IPTV Quebec - Avis et Comparatifs des Services IPTV au Quebec';
     let canonical = document.querySelector('link[rel="canonical"]');
     if (canonical) canonical.setAttribute('href', window.location.origin + '/');
     const posts = await loadPosts();
@@ -1804,7 +1804,7 @@ window.addEventListener('popstate', async function() {
         document.getElementById('categories-section').style.display = 'block';
         document.getElementById('reviews-section').style.display = 'block';
         document.getElementById('posts-section').style.display = 'block';
-        document.title = 'IPTVPrimer.ca - Canadian IPTV & Streaming Guides';
+        document.title = 'Meilleur IPTV Quebec - Avis et Comparatifs des Services IPTV au Quebec';
     }
 });
 
